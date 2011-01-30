@@ -8,9 +8,9 @@ api_version: 1
 handlers:
 
 - url: (.*)/
-  static_files: web-site\1/index.html
-  upload: web-site/index.html
+  static_files: static\1/index.html
+  upload: static/index.html
 
 - url: /
-  static_dir: web-site
+  static_dir: static
   
