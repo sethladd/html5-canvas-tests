@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Starfield</title>
+	</head>
+	<body>
+		<canvas id="canvas" width="768" height="480" style="border:1px solid black;background-color:black">
+		<script>
+		
+		var Util = {
+			getRandomInt: function(min, max) {
+				return Math.floor(Math.random() * (max - min + 1)) + min;
+			}
+		};
+		
+		var Animation = {
+			canvas: document.getElementById('canvas'),
+			ctx: document.getElementById('canvas').getContext('2d'),
+			clearCanvas: function() {
+				this.canvas.width = this.canvas.width;
+			},
+			delay: 10,
+			update: function() {
+				this.clearCanvas();
+				for (var i = 0; i < World.entities.length; i++) {
+					var e = World.entities[i];
+					e.move();
+					e.draw(this.ctx);
+				};
+				setTimeout("Animation.update()", this.delay);
+			}
+		};
+		
+		var Ship = {
+			x: null,
+			y: null,
+			sprite_url: 'shuttle.png',
+			sprite: null,
+			draw: function(_ctx) {
+				_ctx.drawImage(this.sprite, 20, 20);
+			},
+			move: function() {
+				
+			},
+			create: function() {
+				var ship = Object.create(Ship);
+				ship.sprite = new Image();
+				ship.sprite.src = ship.sprite_url;
+				return ship;
+			}
+		};
+		
+		var Star = {
+			x: null,
+			y: null,
+			size: 2,
+			color: '#ffffff',
+			move: function() {
+				this.x -= this.size;
+				if (this.x < 0) {
+					this.x = Animation.canvas.width;
+					this.y = Util.getRandomInt(0,Animation.canvas.height);
+				}
+			},
+			draw: function(_ctx) {
+				_ctx.beginPath();
+				_ctx.fillStyle = this.color;
+				_ctx.arc(this.x, this.y, this.size, 0, Math.PI*2, true);
+				_ctx.closePath();
+				_ctx.fill();
+			},
+			create: function() {
+				var s = Object.create(Star);
+				s.x = Util.getRandomInt(0, canvas.width);
+				s.y = Util.getRandomInt(0, canvas.height);
+				return s;
+			},
+			createNear: function() {
+				var s = this.create();
+				s.size = s.size * 2;
+				return s;
+			},
+			createFar: function() {
+				var s = this.create();
+				s.color = '#888888';
+				return s;
+			},
+			createMedium: function() {
+				var s = this.create();
+				s.color = '#cccccc';
+				s.size = s.size * 1.5;
+				return s;
+			}
+		};
+		
+		var World = {
+			entities: []
+		};
+		
+		for (var i = 0; i < 50; i++) {
+			World.entities.push(Star.createFar());
+		}
+		
+		for (var i = 0; i < 75; i++) {
+			World.entities.push(Star.createMedium());
+		}
+		
+		for (var i = 0; i < 100; i++) {
+			World.entities.push(Star.createNear());
+		}
+		
+		World.entities.push(Ship.create());
+		
+		Animation.update();
+		</script>
+	</body>
+</html>
