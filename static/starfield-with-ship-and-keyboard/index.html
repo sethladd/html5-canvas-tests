@@ -46,13 +46,14 @@
 			move: function() {
 				if (window.keydown.up) {
 					this.y -= 10;
+					if (this.y < 0) {
+						this.y = Animation.canvas.height;
+					}
 				} else if (window.keydown.down) {
 					this.y += 10;
-				}
-				if (this.y < 0) {
-					this.y = Animation.canvas.height;
-				} else if (this.y > Animation.canvas.height) {
-					this.y = 0;
+					if (this.y > Animation.canvas.height) {
+						this.y = 0;
+					}
 				}
 			},
 			create: function() {
